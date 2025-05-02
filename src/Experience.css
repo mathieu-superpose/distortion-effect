@@ -1,0 +1,9 @@
+.experience {
+  height: 100vh;
+}
+
+.canvas-container {
+  width: 80vw;
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
+}
