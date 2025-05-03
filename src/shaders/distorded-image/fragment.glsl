@@ -13,12 +13,15 @@ void main() {
     if(uTime < GROW_TIME) {
 
     // place a circle at the click position and make it grow and fade over time
-        vec3 cicrleColor = vec3(0.8, 0.0, 0.0);
         float dist = distance(uv, uClickPosition);
-        float radius = 0.1 + 0.1 * sin(uTime * 2.0);
-        float alpha = smoothstep(radius, radius + 0.05, dist);
+        float radius = 0.1 + 0.1 * sin(uTime * 2.0) * 10.0;
+        float alpha = smoothstep(radius, radius + 0.05, dist * 0.5);
 
-        color.rgb = mix(color.rgb, cicrleColor, 1.0 - alpha);
+        float x = sin(uv.y * (20.0 * (GROW_TIME - uTime) / GROW_TIME)) * 0.05;
+        vec2 offset = vec2(x, 0.0);
+        vec3 circleColor = texture2D(uTexture, uv + offset).rgb;
+
+        color.rgb = mix(color.rgb, circleColor, 1.0 - alpha);
     }
 
     gl_FragColor = color;
