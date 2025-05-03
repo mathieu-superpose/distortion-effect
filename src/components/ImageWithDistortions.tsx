@@ -8,7 +8,7 @@ import fragment from "../shaders/distorded-image/fragment.glsl"
 
 const ImageDistortionsShaderMaterial = shaderMaterial(
   {
-    uTime: 0,
+    uTime: 10,
     uClickPosition: new THREE.Vector2(0, 0),
   },
   vertex,
@@ -27,7 +27,7 @@ function ImageWithDistortions({ imageUrl }: { imageUrl: string }) {
     const material = new THREE.ShaderMaterial({
       uniforms: {
         uTexture: new THREE.Uniform(texture),
-        uTime: new THREE.Uniform(0),
+        uTime: new THREE.Uniform(10),
         uClickPosition: new THREE.Uniform(new THREE.Vector2(0, 0)),
       },
       vertexShader: vertex,
@@ -36,7 +36,12 @@ function ImageWithDistortions({ imageUrl }: { imageUrl: string }) {
     return material
   }, [imageUrl])
 
-  const clock = useMemo(() => new THREE.Clock(), [])
+  const clock = useMemo(() => {
+    const c = new THREE.Clock(false)
+    c.elapsedTime = 10
+
+    return c
+  }, [])
 
   const handleClick = (e: ThreeEvent<MouseEvent>) => {
     const uv = e.uv
