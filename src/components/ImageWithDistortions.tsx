@@ -1,12 +1,19 @@
 import { useMemo } from "react"
 import * as THREE from "three"
-import { extend } from "@react-three/fiber"
+import { extend, ThreeEvent, useFrame } from "@react-three/fiber"
 import { shaderMaterial } from "@react-three/drei"
 
 import vertex from "../shaders/distorded-image/vertex.glsl"
 import fragment from "../shaders/distorded-image/fragment.glsl"
 
-const ImageDistortionsShaderMaterial = shaderMaterial({}, vertex, fragment)
+const ImageDistortionsShaderMaterial = shaderMaterial(
+  {
+    uTime: 0,
+    uClickPosition: new THREE.Vector2(0, 0),
+  },
+  vertex,
+  fragment
+)
 
 extend({ ImageDistortionsShaderMaterial })
 
@@ -20,6 +27,8 @@ function ImageWithDistortions({ imageUrl }: { imageUrl: string }) {
     const material = new THREE.ShaderMaterial({
       uniforms: {
         uTexture: new THREE.Uniform(texture),
+        uTime: new THREE.Uniform(0),
+        uClickPosition: new THREE.Uniform(new THREE.Vector2(0, 0)),
       },
       vertexShader: vertex,
       fragmentShader: fragment,
@@ -27,8 +36,31 @@ function ImageWithDistortions({ imageUrl }: { imageUrl: string }) {
     return material
   }, [imageUrl])
 
+  const clock = useMemo(() => new THREE.Clock(), [])
+
+  const handleClick = (e: ThreeEvent<MouseEvent>) => {
+    const uv = e.uv
+    if (uv) {
+      //  restart the clock
+      clock.stop()
+      // set the click position
+      material.uniforms.uClickPosition.value.set(uv.x, uv.y)
+
+      // restart the animation
+      clock.start()
+      // set the time to 0
+      material.uniforms.uTime.value = 0
+      // animate the time
+    }
+  }
+
+  useFrame(() => {
+    // update the time
+    material.uniforms.uTime.value = clock.getElapsedTime()
+  })
+
   return (
-    <mesh material={material}>
+    <mesh material={material} onClick={(e) => handleClick(e)}>
       <planeGeometry args={[1, 1]} />
     </mesh>
   )
