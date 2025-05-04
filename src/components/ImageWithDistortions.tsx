@@ -3,6 +3,11 @@ import * as THREE from "three"
 import { extend, ThreeEvent, useFrame } from "@react-three/fiber"
 import { shaderMaterial } from "@react-three/drei"
 
+// // Crazy picture
+// import vertex from "../shaders/crazy-picture/vertex.glsl"
+// import fragment from "../shaders/crazy-picture/fragment.glsl"
+
+// Distorted image
 import vertex from "../shaders/distorded-image/vertex.glsl"
 import fragment from "../shaders/distorded-image/fragment.glsl"
 
