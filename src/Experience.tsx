@@ -8,7 +8,7 @@ function Experience() {
   return (
     <div className="experience">
       <div className="canvas-container">
-        <Canvas shadows camera={{ position: [0, 0, 5], fov: 25 }}>
+        <Canvas shadows camera={{ position: [0, 0, 3], fov: 25 }}>
           <ImageWithDistortions imageUrl="/img/beach.png" />
         </Canvas>
       </div>
